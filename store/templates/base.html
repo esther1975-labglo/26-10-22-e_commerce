@@ -46,16 +46,20 @@
               <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href=""><h4>Hello, {{user}}</h4></a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'wishlist' %}"><h4>wishlist</h4></a>
+              </li>
             </ul>
             <form class="d-flex">
               <a href = "{% url 'cart' %}">
                 <div class ='cart_container'>
                 <img src = "{% static 'image/cart2.png' %}">
+       
                 <div class = 'cart-item-count'><h4>{{cart.get_itemtotal}}</h4></div>
             </div>
           </a> 
             </form>
-            
+           
           </div>
         </div>
       </nav>
