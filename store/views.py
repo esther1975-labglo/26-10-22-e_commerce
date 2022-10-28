@@ -1,6 +1,8 @@
 from django.shortcuts import render
-from .models import Cartitems, Customer, Product, Cart
+from .models import Cartitems, Customer, Product, Cart, Wishlist
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 import json
 
 
@@ -50,7 +52,6 @@ def updateCart(request):
 
     return JsonResponse("Cart Updated", safe = False)
 
-
 def updateQuantity(request):
     data = json.loads(request.body)
     quantityFieldValue = data['qfv']
@@ -59,3 +60,37 @@ def updateQuantity(request):
     product.quantity = quantityFieldValue
     product.save()
     return JsonResponse("Quantity updated", safe = False)
+    
+@login_required
+def wishlist(request):
+	wishlist = Wishlist.objects.filter(user = request.user)
+	context = {'wishlist':wishlist}
+	return render(request, 'wishlist.html', context)
+
+
+@login_required
+def liked(request):
+    wishlist = {}
+    if request.method == "GET":
+        if request.user.is_authenticated:
+            wishlist = Wishlist.objects.filter(user_id_id=request.user.pk)
+        else:
+            print("Please login")
+            return HttpResponse("store")
+
+    return render(request, template_name='wishlist.html', context={"wishlist": wishlist})
+
+@login_required
+def add_to_wishlist(request):
+    if request.is_ajax() and request.POST and 'attr_id' in request.POST:
+        if request.user.is_authenticated:
+            data = Wishlist.objects.filter(user_id_id = request.user.pk,music_id_id = int(request.POST['attr_id']))
+            if data.exists():
+                data.delete()
+            else:
+                Wishlist.objects.create(user_id_id = request.user.pk,music_id_id = int(request.POST['attr_id']))
+    else:
+        print("No Product is Found")
+
+    return redirect("main:home")
+
