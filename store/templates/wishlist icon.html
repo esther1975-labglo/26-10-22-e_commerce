@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>onclick wishlist heart animation</title>
+  <style>
+.heart {
+  width: 100px;
+  height: 100px;
+  background: url("heart.png") no-repeat;
+  background-position: 0 0;
+  cursor: pointer;
+  transition: background-position 1s steps(28);
+  transition-duration: 0s;
+}
+.heart.is-active {
+  transition-duration: 1s;
+  background-position: -2800px 0;
+}
+
+
+
+.stage {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
+}
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="heart"></div>
+</div>
+
+  <script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
+  <script>
+  $(function() {
+  $(".heart").on("click", function() {
+    $(this).toggleClass("is-active");
+  });
+});
+  </script>
+
+</body>
+</html>
