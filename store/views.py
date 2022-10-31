@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import json
-#import {FavoriteBorderIcon} from '@mui/icons-material';
+
 
 def store(request):
     if request.user.is_authenticated:
@@ -99,7 +99,7 @@ def add_to_wishlist(request):
 
     return redirect("main:home")
 
-def add_wishlist(request, id):
+def add_item_wishlist(request, id):
 	pid = request.GET.get('product')
 	product = Product.objects.get(id = id)
 	data={'pid':pid}
@@ -118,8 +118,21 @@ def add_wishlist(request, id):
 		}
 	return JsonResponse(data)
 
-# My Wishlist
+
 def my_wishlist(request):
 	wlist = Wishlist.objects.filter(user = request.user).order_by('-id')
 	return render(request, 'wishlist.html',{'wlist':wlist})
-    
+
+def add_wishlist(request, id):
+
+   products = Product.objects.get(id = id)
+   created,wishlist = Wishlist.objects.get_or_create(user = request.user) 
+   wishlists = Wishlist.objects.get(user = request.user) 
+   wishlists.product.add(products) 
+   messages.success(request, products.title)
+   return redirect('store')  
+
+def brand_product_list(request, id):#brand_id):
+	brand = Brand.objects.get(id=id)#brand_id)
+	data = Product.objects.filter(brand=brand).order_by('-id')
+	return render(request,'category_product_list.html', {'data':data})                                         

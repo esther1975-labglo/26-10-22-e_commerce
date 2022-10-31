@@ -3,6 +3,13 @@ from django.contrib.auth.models import User
 import uuid
 from django.db.models.lookups import IntegerFieldFloatRounding
 
+class TimeStampBaseModel(models.Model):
+    created_on =  models.DateTimeField(auto_now_add=True)
+    updated_on =  models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True 
+
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=50)
@@ -15,10 +22,18 @@ class Product(models.Model):
 	title = models.CharField(max_length = 50)
 	name = models.CharField(max_length = 50)
 	price = models.FloatField(default = 10.55)
-	image = models.ImageField(upload_to="static/image/")
+	image = models.ImageField(upload_to = "static/image/")
 	stock_aval = models.BooleanField(null = True)
 	def __str__(self):
 		return self.name
+
+class Brand(models.Model):
+    title = models.CharField(max_length=100)
+    image = models.ImageField(upload_to="static/image/")
+
+
+    def __str__(self):
+        return self.title
 
 class Cart(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
@@ -85,4 +100,7 @@ class Wishlist(models.Model):
 	def __str__(self):
 		return self.wished_item.title
 		
+def dateparse(self):
+    line_login_required
+    
 
