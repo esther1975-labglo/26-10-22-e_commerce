@@ -78,7 +78,17 @@ class Cartitems(models.Model):
     def __str__(self):
         return self.product.name
         
+class Order(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    product =  models.ForeignKey(Product, on_delete=models.CASCADE)
+    cart_items = models.ForeignKey(Cartitems, on_delete=models.CASCADE)
+    status = models.BooleanField(default = False)
 
+    def placeorder(self):
+        self.save
+
+    def get_order_by_customer(self, id):
+        return Order.objects.filter(customer = customer_id)
 
 class ShippingAddress(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
@@ -100,7 +110,5 @@ class Wishlist(models.Model):
 	def __str__(self):
 		return self.wished_item.title
 		
-def dateparse(self):
-    line_login_required
-    
+ 
 

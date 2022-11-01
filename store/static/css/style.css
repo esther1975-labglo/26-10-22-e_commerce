@@ -109,11 +109,15 @@
     position: relative;
     
 }
-
+.checked {
+    color: orange;
+  }
 .wishlist_container img{
     width:  65%;
     height: 65%;
 }
+
+
 
 .wishlist-item-count{
     width: 40px;
