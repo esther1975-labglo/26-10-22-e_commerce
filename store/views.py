@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from .models import Cartitems, Customer, Product, Cart, Wishlist
 from django.http import JsonResponse
+from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import json
-
+from django.shortcuts import get_list_or_404, get_object_or_404
 
 def store(request):
     if request.user.is_authenticated:
@@ -65,7 +66,20 @@ def updateQuantity(request):
     product.quantity = quantityFieldValue
     product.save()
     return JsonResponse("Quantity updated", safe = False)
-    
+
+"""def remove_cart(self, id):
+        product_id = str(Product.id)
+        if product_id in self.Cartitems.objects.all():
+            del self.Cartitems[product_id]
+            self.save()"""
+
+def remove_cart(request, id):
+    #cart = Cart.objects.get(id = id)
+    product = get_object_or_404(Product, id = id)
+    cart_item = Cartitems.objects.get(product = Product.product_id)#, cart = cart)
+    cart_item.delete()
+    return HttpResponseRedirect(reverse('cart'))
+
 @login_required
 def wishlist(request):
 	wishlist = Wishlist.objects.filter(user = request.user)
@@ -89,48 +103,16 @@ def liked(request):
 def add_to_wishlist(request):
     if request.is_ajax() and request.POST and 'attr_id' in request.POST:
         if request.user.is_authenticated:
-            data = Wishlist.objects.filter(user_id_id = request.user.pk,music_id_id = int(request.POST['attr_id']))
+            data = Wishlist.objects.filter(user_id_id = request.user.pk, product_id_id = int(request.POST['attr_id']))
             if data.exists():
                 data.delete()
             else:
-                Wishlist.objects.create(user_id_id = request.user.pk,music_id_id = int(request.POST['attr_id']))
+                Wishlist.objects.create(user_id_id = request.user.pk, product_id_id = int(request.POST['attr_id']))
     else:
         print("No Product is Found")
 
     return redirect("main:home")
-
-def add_item_wishlist(request, id):
-	pid = request.GET.get('product')
-	product = Product.objects.get(id = id)
-	data={'pid':pid}
-	checkw = Wishlist.objects.filter(product = product,user = request.user).count()
-	if checkw > 0:
-		data = { 
-			'bool':False
-		}
-	else:
-		wishlist = Wishlist.objects.create(
-			product = product,
-			user = request.user
-		)
-		data = {
-			'bool':True
-		}
-	return JsonResponse(data)
-
-
-def my_wishlist(request):
-	wlist = Wishlist.objects.filter(user = request.user).order_by('-id')
-	return render(request, 'wishlist.html',{'wlist':wlist})
-
-def add_wishlist(request, id):
-
-   products = Product.objects.get(id = id)
-   created,wishlist = Wishlist.objects.get_or_create(user = request.user) 
-   wishlists = Wishlist.objects.get(user = request.user) 
-   wishlists.product.add(products) 
-   messages.success(request, products.title)
-   return redirect('store')  
+ 
 
 def brand_product_list(request, id):#brand_id):
 	brand = Brand.objects.get(id=id)#brand_id)
