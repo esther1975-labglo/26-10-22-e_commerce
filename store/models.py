@@ -60,7 +60,7 @@ class Cartitems(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     product =  models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=0)
-    tax = models.FloatField(default=2.25)
+    tax = models.FloatField(default=22.50)
     
     def grand_total(self):
     	return self.get_total() * (1 + self.tax)
@@ -68,7 +68,7 @@ class Cartitems(models.Model):
   
     @property
     def get_total(self):
-        total = self.quantity * self.product.price + 2.55
+        total = self.quantity * self.product.price + 22.50
         if total == 0.00:
             self.delete()
         return total
@@ -110,5 +110,6 @@ class Wishlist(models.Model):
 	def __str__(self):
 		return self.wished_item.title
 		
- 
+#class all_error(models.Model):
+    #unique =
 

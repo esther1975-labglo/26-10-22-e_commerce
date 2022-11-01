@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="py-3-bg-primary">
+	<div class="container">
+		<a class="text-white" href="{% url 'store' %}">Home</a>
+		<a class="text-white" href="{% url 'wishlist' %}">wishlist</a>
+	</div>
+</div>
+<table>
+    <tr>
+    <th>Name</th>
+    <th>status</th>
+
+</tr>
+<tr>
+   {} %for i in product%}
+    <td>{{i.product.name}}</td>
+    {% if order.status%}
+
+    <td><small class = "badge-badge-success">success</small></td>
+    {%else%}
+    <td><small class = "badge-badge-warning">pending</small></td>
+    
+{%endif%}
+</tr>
+</table>

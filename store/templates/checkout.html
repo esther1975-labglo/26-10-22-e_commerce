@@ -61,6 +61,42 @@
           </div>
       </div>
 
+
+      <div class = 'col-md-6'>
+
+
+        <div class="uk-width-xlarge uk-margin">
+            <div class="uk-card uk-card-small uk-card-default uk-card-body"><table class="table">
+                <thead>
+                  <tr>
+                    
+                    <h2>Order Summary</h2>
+                   <td><h3><strong>Total: ${{cart.get_cart_total}}</strong></h3></td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row"><div id = "cart_image"><img src = '{{product.image.url}}'></div></th>
+                    <td><h3>name</h3></td>
+                    <td><h3>price</h3></td>
+                    
+                  </tr>
+                 
+                  <tr>
+                    <th scope="row"><div id = "cart_image"><img src = '{{item.product.image.url}}'></div></th>
+                    <td><h3>{{product.name}}</h3></td>
+                    <td><h3>{{product.price}}</h3></td>
+                   
+                  </tr>
+                </tbody>
+              </table></div></div>
+
+        
+    </div>
+
+</div>
+</div>
+
       <div class = 'container'>
         <div class = 'row'>
        
@@ -133,41 +169,7 @@
 
       
 
-<!--
-        <div class = 'col-md-6'>
 
 
-            <div class="uk-width-xlarge uk-margin">
-                <div class="uk-card uk-card-small uk-card-default uk-card-body"><table class="table">
-                    <thead>
-                      <tr>
-                        
-                        <h2>Order Summary</h2>
-                       <td><h3><strong>Total: ${{cart.get_cart_total}}</strong></h3></td>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <th scope="row"><div id = "cart_image"><img src = '{{item.product.image.url}}'></div></th>
-                        <td><h3>name</h3></td>
-                        <td><h3>email</h3></td>
-                        <td><h3>address</h3></td>
-                      </tr>
-                     
-                      <tr>
-                        <th scope="row"><div id = "cart_image"><img src = '{{item.product.image.url}}'></div></th>
-                        <td><h3>name</h3></td>
-                        <td><h3>email</h3></td>
-                        <td><h3>address</h3></td>
-                      </tr>
-                    </tbody>
-                  </table></div></div>
 
-            
-        </div>
-
-    </div>
-</div>
-
--->
 {% endblock %}
