@@ -80,6 +80,8 @@ def remove_cart(request, id):
     cart_item.delete()
     return HttpResponseRedirect(reverse('cart'))
 
+
+
 @login_required
 def wishlist(request):
 	wishlist = Wishlist.objects.filter(user = request.user)

@@ -3,54 +3,60 @@
 {% block content %}
 
 <center>
-<form method="get" action="">
-  {% csrf_token %}
-  Search Product: <input name="src" type="text" placeholder="Search" value="">
-</form>
+  <form method="post" action="">
+    {% csrf_token %}
+    Search Product: <input name="src" type="text" placeholder="Search" value="">
+  </form>
 </center>
 
-<div class = 'container'>
-    <div class = 'row'>
-      {% for product in products %}
+<div class='container'>
+  <div class='row'>
+    {% for product in products %}
+
+    <div class='col-md-4 col-lg-4'>
+      <div class="card" style="width: 20rem;">
+
+        {% if user.is_authenticated %}
+        <button style="margin-left: auto; color:rgb(236, 247, 247);" class="btn btn-sm btn-danger add-wishlist"
+          data-product="{{product.id}}"><i id = "btn" id = "utn" class="fa fa-heart"></i></button>
+        {% else %}
+        <button><i id = "btn" class="fa fa-heart"></i></button>
+        {% endif %}
+
+         <img src = "/home/user/ecommerce/store/static/image/wishlist.png">
+
         
-        <div class = 'col-md-4 col-lg-4'>
-          <div class="card" style="width: 20rem;">
-            
-            {% if user.is_authenticated %}
-            <button  style = "margin-left: auto; color:rgb(252, 243, 243);" class ="btn btn-sm btn-danger add-wishlist" data-product="{{product.id}}"><i class="fa fa-heart"></i></button>
-    {% else %}
-    <button class="btn btn-sm btn-danger disabled"><i class="fa fa-heart"></i></button>
-    {% endif %}  
-   
-              <img src="{{product.image.url}}" class="card-img-top" alt="{{product.name}} ">
-              <div class="card-body">
-                <h3 class="card-title">{{product.name}}</h3>
-                <h4 class="card-text"> ₹{{product.price}}</h4>
-                
-               
-                
-                    
-                <a  class="btn btn-primary addtocart" data-action = "add" data-product = "{{product.id}}">Add to Cart</a>  
-                <a  class="btn btn-primary addtobuynow" data-action = "add" data-product = "{{product.id}}">Buy Now</a>
-                
-              </div>
-            </div>
+
+        <img src="{{product.image.url}}" class="card-img-top" alt="{{product.name}} ">
+        <div class="card-body">
+          <h3 class="card-title">{{product.name}}</h3>
+          <h4 class="card-text"> ₹{{product.price}}</h4>
+
+
+
+
+          <a class="btn btn-primary addtocart" data-action="add" data-product="{{product.id}}">Add to Cart</a>
+          <a class="btn btn-primary addtobuynow" data-action="add" data-product="{{product.id}}">Buy Now</a>
+
         </div>
-        {% endfor %}
-
-        
-      
-
-        
-
-       
-
+      </div>
     </div>
+    {% endfor %}
+
+
+
+
+
+
+
+
+  </div>
 </div>
 
 {% load static %}
 <link rel="stylesheet" href="{% static 'main/home.css' %}" type="text/css">
-<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css" integrity="sha384-Bfad6CLCknfcloXFOyFnlgtENryhrpZCe29RTifKEixXQZ38WheV+i/6YWSzkz3V" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css"
+  integrity="sha384-Bfad6CLCknfcloXFOyFnlgtENryhrpZCe29RTifKEixXQZ38WheV+i/6YWSzkz3V" crossorigin="anonymous">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">-
 
@@ -60,46 +66,66 @@ Hey there,
 {% else %}
 <h1>unknown</h1>
 {% endif %}
-<a href="{% url 'liked' %}" >Wishlist</a>
+<a href="{% url 'liked' %}">Wishlist</a>
 
 <section class="cards">
-    {% for m in music %}
+  {% for m in music %}
 
-    <div class="card">
+  <div class="card">
 
-        <div class="top">
-            <div class="label1">{{m.song}}</div>
-            {% if m.pk in wishlisted_list %}
-            {% for i in wishlisted_list %}
-            {% if m.pk is i %}
-            <span class="like heart" id="id" attr_id="{{m.pk}}" action_url="{% url 'main:add_to_wishlist' %}"><i class="fa fa-heart"></i></span>
-            {% endif %}
-            {% endfor %}
-            {% else %}
-            <span class="like" id="id" attr_id="{{m.pk}}" action_url="{% url 'main:add_to_wishlist' %}"><i class="fa fa-heart"></i></span>
-            {% endif %}
-        </div>
-
-
-        <div class="middle">
-            <a href="https://google.com" id="link" target="_blank">
-                <div class="img-container"><img src="{{ m.pic.url }}"></div>
-            </a>
-        </div>
-
-        <a href="https://google.com" id="link" target="_blank">
-            <div class="bottom">
-                <div class="label4">{{m.description}}</div>
-            </div>
-        </a>
-
+    <div class="top">
+      <div class="label1">{{m.song}}</div>
+      {% if m.pk in wishlisted_list %}
+      {% for i in wishlisted_list %}
+      {% if m.pk is i %}
+      <span class="like heart" id="id" attr_id="{{m.pk}}" action_url="{% url 'main:add_to_wishlist' %}"><i
+          class="fa fa-heart"></i></span>
+      {% endif %}
+      {% endfor %}
+      {% else %}
+      <span class="like" id="id" attr_id="{{m.pk}}" action_url="{% url  'main:add_to_wishlist' %}"><i
+          class="fa fa-heart"></i></span>
+      {% endif %}
     </div>
-    {% endfor %}
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="{% static 'main/js/like.js' %}" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+
+
+    <div class="middle">
+      <a href="https://google.com" id="link" target="_blank">
+        <div class="img-container"><img src="{{ m.pic.url }}"></div>
+      </a>
+    </div>
+
+    <a href="https://google.com" id="link" target="_blank">
+      <div class="bottom">
+        <div class="label4">{{m.description}}</div>
+      </div>
+    </a>
+
+  </div>
+  {% endfor %}
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="{% static 'main/js/like.js' %}" type="text/javascript"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 </section>
 
+<script>
+  const btn = document.getElementById('btn');
 
+  btn.addEventListener('click', function onClick() {
+    console.log(btn)
+    btn.style.backgroundColor = 'white';
+    btn.style.color = 'red';
+  });
+</script>
 
-{% endblock %}
+<script>
+  const btn = document.getElementById('utn');
+
+  btn.addEventListener('click', function onClick() {
+    console.log(btn)
+    btn.style.backgroundColor = 'white';
+    btn.style.color = 'red';
+  });
+</script>
+
+{% endblock %}  
