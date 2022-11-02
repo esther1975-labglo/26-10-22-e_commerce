@@ -3,12 +3,7 @@ from django.contrib.auth.models import User
 import uuid
 from django.db.models.lookups import IntegerFieldFloatRounding
 
-class TimeStampBaseModel(models.Model):
-    created_on =  models.DateTimeField(auto_now_add=True)
-    updated_on =  models.DateTimeField(auto_now=True)
-
-    class Meta:
-        abstract = True 
+ 
 
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -19,18 +14,20 @@ class Customer(models.Model):
         return self.name
 
 class Product(models.Model):
-	title = models.CharField(max_length = 50)
-	name = models.CharField(max_length = 50)
-	price = models.FloatField(default = 10.55)
-	image = models.ImageField(upload_to = "static/image/")
-	stock_aval = models.BooleanField(null = True)
-	def __str__(self):
-		return self.name
+        title = models.CharField(max_length = 50)
+        name = models.CharField(max_length = 50)
+        price = models.FloatField(default = 10.55)
+        image = models.ImageField(upload_to = "static/image/")
+        stock_aval = models.BooleanField(null = True)
+        @staticmethod
+        def autocomplete_search_fields():
+            return ("title__icontains", "name__icontains", "price__icontains", "image__icontains")
+        def __str__(self):
+            return self.name
 
 class Brand(models.Model):
     title = models.CharField(max_length=100)
     image = models.ImageField(upload_to="static/image/")
-
 
     def __str__(self):
         return self.title

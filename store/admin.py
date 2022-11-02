@@ -4,6 +4,7 @@ from . models import *
 
 admin.site.register(Customer)
 
+
 admin.site.register(Product)
 
 admin.site.register(Brand)
@@ -18,3 +19,10 @@ admin.site.register(Wishlist)
 
 #admin.site.register(wishlist_items)
 admin.site.register(ShippingAddress)
+
+
+class ProductAdmin(admin.ModelAdmin):
+   raw_id_fields = ('title', 'name', 'price', 'image',)
+   autocomplete_lookup_fields = {
+   'fk': ['featured_user','featured_story'],
+   }

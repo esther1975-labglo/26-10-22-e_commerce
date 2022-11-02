@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 
@@ -26,11 +26,20 @@ SECRET_KEY = '!vkzhd5$cv*=7&7po7kb46&!w!&^x)slaz^yyaol(*(0hg6^wm'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
-
+PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
+STATIC_ROOT = os.path.join(PROJECT_DIR, 'static')
+STATIC_URL = '/static/'
 # Application definition
 
+GRAPPELLI_ADMIN_TITLE = 'E-Commerce'
+GRAPPELLI_SWITCH_USER = False
+GRAPPELLI_SWITCH_USER_ORIGINAL = False
+GRAPPELLI_SWITCH_USER_TARGET = False
+GRAPPELLI_CLEAN_INPUT_TYPES = False
+
+
 INSTALLED_APPS = [
+    'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
