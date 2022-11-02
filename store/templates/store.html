@@ -3,10 +3,13 @@
 {% block content %}
 
 <center>
+  <div class="SearchBar">
   <form method="post" action="">
     {% csrf_token %}
-    Search Product: <input name="src" type="text" placeholder="Search" value="">
+    
+    Search Product: <input name="src" size = "50" type="text" placeholder="Search" value="">
   </form>
+</div>
 </center>
 
 <div class='container'>
@@ -22,10 +25,8 @@
         {% else %}
         <button><i id = "btn" class="fa fa-heart"></i></button>
         {% endif %}
+   
 
-         <img src = "/home/user/ecommerce/store/static/image/wishlist.png">
-
-        
 
         <img src="{{product.image.url}}" class="card-img-top" alt="{{product.name}} ">
         <div class="card-body">
@@ -37,6 +38,25 @@
 
           <a class="btn btn-primary addtocart" data-action="add" data-product="{{product.id}}">Add to Cart</a>
           <a class="btn btn-primary addtobuynow" data-action="add" data-product="{{product.id}}">Buy Now</a>
+          <img src="https://png.pngitem.com/pimgs/s/83-839612_white-heart-clipart-white-love-heart-vector-hd.png" id="myImage" width="40" height="50">
+          <input type="button" onclick="changeImage()" value="Wishlist" />
+          <img id="image" src = "">
+
+       
+            
+             <script>
+               function show() {
+         
+                   
+                   let image = document.getElementById("image");
+         
+                   image.src =
+         "/home/user/ecommerce/store/static/image/wishlist1.png"
+         
+                   document.getElementById("btnID")
+                           .style.display = "none";
+               }
+           </script>
 
         </div>
       </div>
@@ -118,14 +138,20 @@ Hey there,
   });
 </script>
 
-<script>
-  const btn = document.getElementById('utn');
 
-  btn.addEventListener('click', function onClick() {
-    console.log(btn)
-    btn.style.backgroundColor = 'white';
-    btn.style.color = 'red';
-  });
+
+
+
+<script>
+    function changeImage() {
+        var image = document.getElementById('myImage');
+        if (image.src.match("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPBizd5gr5iPQn-vZewWOIvZLr5WadGOMbdQ&usqp=CAU")) {
+            image.src = "https://png.pngitem.com/pimgs/s/83-839612_white-heart-clipart-white-love-heart-vector-hd.png";
+        }
+        else {
+            image.src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPBizd5gr5iPQn-vZewWOIvZLr5WadGOMbdQ&usqp=CAU";
+        }
+    }
 </script>
 
 {% endblock %}  
