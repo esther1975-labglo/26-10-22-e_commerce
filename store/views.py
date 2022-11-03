@@ -5,8 +5,10 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import json
+from django.views.generic.list import ListView
 from django.shortcuts import get_list_or_404, get_object_or_404
 
+from django.core import serializers 
 def store(request):
     if request.user.is_authenticated:
     	global cart
@@ -119,4 +121,40 @@ def add_to_wishlist(request):
 def brand_product_list(request, id):#brand_id):
 	brand = Brand.objects.get(id=id)#brand_id)
 	data = Product.objects.filter(brand=brand).order_by('-id')
-	return render(request,'category_product_list.html', {'data':data})                                         
+	return render(request,'category_product_list.html', {'data':data})     
+
+class product_list(ListView):
+    model = Product
+    def render_to_response(self, request):
+        form = Product.objects.all()
+        data = serializers.serialize("json", form, indent = 4)
+        print("Get", data)
+        obj = json.loads(data)
+        return JsonResponse(obj, content_type = "application/json", status = 200, safe = False)
+
+class cart_list(ListView):
+    model = Cart
+    def render_to_response(self, request):
+        form = Cart.objects.all()
+        data = serializers.serialize("json", form, indent = 4)
+        print("Get", data)
+        obj = json.loads(data)
+        return JsonResponse(obj, content_type = "application/json", status = 200, safe = False)
+
+class cart_items_list(ListView):
+    model = Cartitems
+    def render_to_response(self, request):
+        form = Cartitems.objects.all()
+        data = serializers.serialize("json", form, indent = 4)
+        print("Get", data)
+        obj = json.loads(data)
+        return JsonResponse(obj, content_type = "application/json", status = 200, safe = False)
+
+class wishlist_list(ListView):
+    model = Wishlist
+    def render_to_response(self, request):
+        form = Wishlist.objects.all()
+        data = serializers.serialize("json", form, indent = 4)
+        print("Get", data)
+        obj = json.loads(data)
+        return JsonResponse(obj, content_type = "application/json", status = 200, safe = False)
