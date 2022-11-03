@@ -39,6 +39,7 @@ GRAPPELLI_CLEAN_INPUT_TYPES = False
 
 
 INSTALLED_APPS = [
+   # 'jazzmin',
     'grappelli',
     'django.contrib.admin',
     'django.contrib.auth',

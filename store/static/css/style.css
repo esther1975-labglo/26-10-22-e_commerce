@@ -65,7 +65,7 @@
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    background-color: rgb(81, 223, 135);
+    background-color: rgb(52, 157, 218);
     position: absolute;
     top: 0px;
     right: 0px;
@@ -153,3 +153,4 @@
     height: 200px;
     background-color: red;
 }
+

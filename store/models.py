@@ -3,7 +3,22 @@ from django.contrib.auth.models import User
 import uuid
 from django.db.models.lookups import IntegerFieldFloatRounding
 
- 
+FAILED = 0
+PENDING = 1
+SUCCESS = 2
+
+Order_choices = [
+    ('PENDING', 'pending'),
+    ('FAILED', 'failed'),
+    ('SUCCESS', 'success'),
+]
+
+class TimeStampBaseModel(models.Model):
+    created_on = models.DateTimeField(auto_now_add=True, null=True)
+    updated_on = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True  
 
 class Customer(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -13,10 +28,11 @@ class Customer(models.Model):
     def __str__(self):
         return self.name
 
-class Product(models.Model):
+class Product(TimeStampBaseModel):
         title = models.CharField(max_length = 50)
         name = models.CharField(max_length = 50)
         price = models.FloatField(default = 10.55)
+        brand = models.ImageField(upload_to = "static/image/")
         image = models.ImageField(upload_to = "static/image/")
         stock_aval = models.BooleanField(null = True)
         @staticmethod
@@ -32,7 +48,7 @@ class Brand(models.Model):
     def __str__(self):
         return self.title
 
-class Cart(models.Model):
+class Cart(TimeStampBaseModel):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     cart_id = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
     is_active = models.BooleanField(default=False)
@@ -53,7 +69,7 @@ class Cart(models.Model):
     def __str__(self):
         return str(self.id)
 
-class Cartitems(models.Model):
+class Cartitems(TimeStampBaseModel):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE)
     product =  models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=0)
@@ -75,7 +91,7 @@ class Cartitems(models.Model):
     def __str__(self):
         return self.product.name
         
-class Order(models.Model):
+class Order(TimeStampBaseModel):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     product =  models.ForeignKey(Product, on_delete=models.CASCADE)
     cart_items = models.ForeignKey(Cartitems, on_delete=models.CASCADE)
@@ -86,6 +102,18 @@ class Order(models.Model):
 
     def get_order_by_customer(self, id):
         return Order.objects.filter(customer = customer_id)
+
+class ProductOrder(TimeStampBaseModel):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
+    cart_product = models.ManyToManyField(Cart)
+    tax = models.FloatField()
+    status = models.IntegerField(
+        choices=Order_choices,
+        default=PENDING
+    )
+
+    def __str__(self):
+        return self.user.username
 
 class ShippingAddress(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
@@ -99,7 +127,7 @@ class ShippingAddress(models.Model):
         return self.address
 
 
-class Wishlist(models.Model):
+class Wishlist(TimeStampBaseModel):
 	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	wished_item = models.ForeignKey(Product, on_delete=models.CASCADE)
 	added_date = models.DateTimeField(auto_now_add=True)
