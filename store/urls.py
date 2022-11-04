@@ -20,6 +20,7 @@ urlpatterns = [
     #json
 
     path('product_json/', product_list.as_view()),
+    path('search_api/', search_list.as_view()),
     path('cart_json/', cart_list.as_view()),
     path('cartitems_json/', cart_items_list.as_view()),
     path('wishlist_json/', wishlist_list.as_view()),
