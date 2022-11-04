@@ -141,6 +141,7 @@
     position: absolute;
     top: 355px;
     left: 575px;
+    margin-top: auto;
 }
 
 .SearchBar input {
