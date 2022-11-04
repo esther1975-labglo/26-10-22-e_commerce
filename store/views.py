@@ -1,25 +1,29 @@
 from django.shortcuts import render
-from .models import Cartitems, Customer, Product, Cart, Wishlist
+from .models import Cartitems, Customer, Product, Cart, Wishlist, Order
 from django.http import JsonResponse
 from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import json
 import csv
+from django.db.models import Q
 from django.views.generic.list import ListView
 from django.shortcuts import get_list_or_404, get_object_or_404
-
+from math import ceil
 from django.core import serializers 
 def store(request):
     if request.user.is_authenticated:
-    	global cart
-    	customer = request.user.customer
-    	cart, created = Cart.objects.get_or_create(customer = customer, is_active = False)
-    	cartitems = cart.cartitems_set.all()
+        global cart
+        customer = request.user.customer
+        cart, created = Cart.objects.get_or_create(customer = customer, is_active = False)
+        cartitems = cart.cartitems_set.all()
+        #wishlist, created = Wishlist.objects.get_or_create(customer = customer, is_active = False)
+        #wishlistitems = wishlist.wishlistitems_set.all()
     products = Product.objects.all()
     context = {
     		'products':products,
     		'cart':cart,
+           # 'wishlist_add':wishlist_add,
     		 }
     return render(request, 'store.html', context)
 
@@ -28,7 +32,7 @@ def store(request):
 	#data = Product.objects.filter(title__icontains = q).order_by('-id')
 	#return render(request,'search.html',{'data':data})
 
-def searchMatch(query, item):
+"""def searchMatch(query, item):
     return True
 
 def search(request):
@@ -43,9 +47,22 @@ def search(request):
         nSlides = n // 4 + ceil((n / 2) - (n // 4))
         allproducts.append([b, range(1, nSlides), nSlides])
         parems = {'allproducts':allproducts}
-    return (request, 'store.html', parems)
+    return (request, 'store.html', parems)"""
 
 
+class search(ListView):
+    model = Product
+    template_name = 'store.html'
+    
+    def get_queryset(self):
+        
+        queryset = Product.objects.all()
+        if self.request.GET.keys():
+           if self.request.GET.get('src') != '':
+                keyword = self.request.GET.get('src')
+                queryset = Product.objects.filter(Q(name__icontains = keyword.capitalize()) | Q(name__icontains = keyword.capitalize()))
+              
+        return queryset
 
 def cart(request):
     if request.user.is_authenticated:
@@ -97,7 +114,7 @@ def updateQuantity(request):
 def remove_cart(request, id):
     #cart = Cart.objects.get(id = id)
     product = get_object_or_404(Product, id = id)
-    cart_item = Cartitems.objects.get(product = Product.product_id)#, cart = cart)
+    cart_item = Cartitems.objects.get(product = Product.product_id, cart = cart)
     cart_item.delete()
     return HttpResponseRedirect(reverse('cart'))
 
@@ -108,6 +125,12 @@ def wishlist(request):
 	wishlist = Wishlist.objects.filter(user = request.user)
 	context = {'wishlist':wishlist}
 	return render(request, 'wishlist.html', context)
+
+@login_required
+def order(request):
+	order = Order.objects.filter(user = request.user)
+	context = {'order':order}
+	return render(request, 'order.html', context)
 
 
 @login_required
@@ -140,7 +163,9 @@ def add_to_wishlist(request):
 def brand_product_list(request, id):#brand_id):
 	brand = Brand.objects.get(id=id)#brand_id)
 	data = Product.objects.filter(brand=brand).order_by('-id')
-	return render(request,'category_product_list.html', {'data':data})     
+	return render(request,'category_product_list.html', {'data':data})  
+
+   
 
 class product_list(ListView):
     model = Product

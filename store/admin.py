@@ -10,18 +10,6 @@ class ProductAdmin(admin.ModelAdmin):
     list_editable = ('title',)
     list_filter = ('title', 'name')
     
-    fieldsets = (
-        (None, {
-            'fields': (
-                'id'
-                'title',
-                'name',
-                'brand',
-                'price',
-                'image'
-            )
-        }),
-    )
 admin.site.register(Product, ProductAdmin)
 
 admin.site.register(Brand)
@@ -31,7 +19,9 @@ class cartadmin(admin.ModelAdmin):
   
 
 admin.site.register(Cartitems)
+admin.site.register(Order)
 
+admin.site.register(ProductOrder)
 admin.site.register(Wishlist)
 
 #admin.site.register(wishlist_items)

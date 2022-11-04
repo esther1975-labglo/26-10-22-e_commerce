@@ -50,3 +50,40 @@ def cart_contents(request):
         cart_items.append({'id': id, 'quantity': quantity, 'destination': destination, 'price':price, 'remove':remove})
     #cart_item will loop into the cart.
     return {'cart_items': cart_items, 'total': total, 'destination_count': destination_count}
+
+
+@login_required
+def add_order(request):
+    user = request.user
+    taxs = 22
+    total_price = Cart.objects.filter(Q(user=request.user) & Q(is_active=True)).aggregate(
+        total=Sum(F('price')*F('quantity')))['total']
+    if total_price is not None:
+        order_add = Order.objects.create(
+            user=request.user, tax=taxs, total_cost=total_price,)
+        orders.items.add(
+            *Cart.objects.filter(Q(user=request.user) & Q(is_active=True)))
+        inactive = Cart.objects.filter(user=request.user)
+        inactive.update(is_active=False)
+        order_add.save()
+    return (request, 'order.html')
+
+
+class Orderproducts(ListView):
+    model = Order
+    template_name = "order.html"
+
+    def get_queryset(self):
+        obj = Order.objects.filter(user=self.request.user)
+        return obj
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context['total'] = Order.objects.filter(user=self.request.user).aggregate(
+            Sum('total_cost'))['total_sum']
+        context['tax'] = Order.objects.filter(user=self.request.user).aggregate(
+            total=Sum(F('total_product_cost') * 18/100))['total']
+        if context['sub_total'] is not None:
+            context['total_price'] = context['sub_total'] + context['tax']
+        return context
+        

@@ -84,11 +84,11 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
-
+APPEND_SLASH=False
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'e_commerce',
+        'NAME': 'store',
         'HOST' : 'localhost',
         'PORT' : '3306',
         'USER' : 'root',

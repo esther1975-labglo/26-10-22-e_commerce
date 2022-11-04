@@ -2,15 +2,15 @@
 
 {% block content %}
 
-<center>
+
   <div class="SearchBar">
-    <form method="post" action="{% url 'search' %}">
+    <form method="get" action="{% url 'search' %}">
       {% csrf_token %}
 
-      Search Product: <input name="src" type="text" placeholder="Search" value="">
+      Search Product: <input style = "margin-top: auto;" name="src" type="text" placeholder="Search" value="">
     </form>
   </div>
-</center>
+
 
 
 
@@ -41,7 +41,7 @@
 
 
 
-            <a class="btn btn-primary addtocart" data-action="add" data-product="{{product.id}}"><img src ="/home/user/ecommerce/static/image/es.png" style = "width:30px"></a>
+            <a class="btn btn-primary addtocart" data-action="add" data-product="{{product.id}}"><img src ="https://png.pngtree.com/png-vector/20190320/ourlarge/pngtree-vector-add-to-cart-vector-icon-png-image_850691.jpg" style = "width:30px"></a>
             <a class="btn btn-primary addtobuynow" data-action="add" data-product="{{product.id}}">Buy Now</a>
           
             <a onclick="changeImage()"  class="btn btn-primary addwishlist" data-action="add" data-product="{{product.id}}">WishList</a>

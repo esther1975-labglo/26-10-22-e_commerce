@@ -117,7 +117,9 @@
     height: 65%;
 }
 
-
+.Searchbar{
+    margin-top: auto;
+}
 
 .wishlist-item-count{
     width: 40px;
