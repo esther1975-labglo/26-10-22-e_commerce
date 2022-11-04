@@ -5,6 +5,7 @@ from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import json
+import csv
 from django.views.generic.list import ListView
 from django.shortcuts import get_list_or_404, get_object_or_404
 
@@ -22,10 +23,28 @@ def store(request):
     		 }
     return render(request, 'store.html', context)
 
+#def search(request):
+	#q = request.GET.get('name')
+	#data = Product.objects.filter(title__icontains = q).order_by('-id')
+	#return render(request,'search.html',{'data':data})
+
+def searchMatch(query, item):
+    return True
+
 def search(request):
-	q = request.GET.get('name')
-	data = Product.objects.filter(title__icontains = q).order_by('-id')
-	return render(request,'search.html',{'data':data})
+    query = request.GET.get('search')
+    allproducts = []
+    products = Product.objects.values('title','name')
+    things = {item['name'] for item in products}
+    for i in things:
+        a = Product.objects.filter(name = i)
+        b = [item for item in a if searchMatch(query, item)]
+        n = len(b)
+        nSlides = n // 4 + ceil((n / 2) - (n // 4))
+        allproducts.append([b, range(1, nSlides), nSlides])
+        parems = {'allproducts':allproducts}
+    return (request, 'store.html', parems)
+
 
 
 def cart(request):
@@ -130,6 +149,7 @@ class product_list(ListView):
         data = serializers.serialize("json", form, indent = 4)
         print("Get", data)
         obj = json.loads(data)
+       
         return JsonResponse(obj, content_type = "application/json", status = 200, safe = False)
 
 class cart_list(ListView):
