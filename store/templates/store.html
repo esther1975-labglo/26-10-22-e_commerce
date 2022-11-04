@@ -4,7 +4,7 @@
 
 <center>
   <div class="SearchBar">
-    <form method="post" action="">
+    <form method="post" action="{% url 'search' %}">
       {% csrf_token %}
 
       Search Product: <input name="src" type="text" placeholder="Search" value="">
