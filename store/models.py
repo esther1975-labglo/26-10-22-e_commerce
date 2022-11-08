@@ -134,7 +134,11 @@ class Wishlist(TimeStampBaseModel):
 
 	def __str__(self):
 		return self.wished_item.title
-		
-#class all_error(models.Model):
-    #unique =
+
+class Payment(models.Model):
+    transaction_id = models.IntegerField(null = True)
+    orders = models.ForeignKey(Order, on_delete=models.CASCADE)
+    status = models.BooleanField(default = PENDING)
+    
+
 

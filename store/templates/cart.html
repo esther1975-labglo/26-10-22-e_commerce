@@ -19,7 +19,11 @@
             <td></td>
             <td><h3><strong>Total: ₹{{cart.get_cart_total|floatformat:1}}</strong></h3></td>  
             
-            <td><a href = "http://127.0.0.1:8000/checkout"><button type="button" class="btn btn-primary btn-lg">Checkout</button></a></td>
+            <!--<td><a href = "http://127.0.0.1:8000/checkout"><button type="button" class="btn btn-primary btn-lg">Checkout</button></a></td>-->
+            <td><form action = "checkout" method = "post">
+              {% csrf_token %}
+              <button type = "submit" class="btn btn-primary btn-lg">Checkout</button>
+            </form></td>
           </tr>
           
         </tbody>

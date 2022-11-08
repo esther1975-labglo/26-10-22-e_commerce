@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'store.apps.StoreConfig',
+    'paypal.standard.ipn',
    
 ]
 
@@ -139,4 +140,13 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR/'static']
 MEDIA_URL = '/image/'
 MEDIA_ROOT = BASE_DIR/'static/image'
+
+#django-paypal settings
+PAYPAL_RECEIVER_EMAIL = 'sonails.packtpub-test1@gmail.com'
+PAYPAL_TEST = True
+
+PUBLISHABLE_KEY = 'pk_test_51M1j6ISB7x1JZs2NW14Fmbm3pRdJeOO3Kvxc4viaoCDLBbyRbxhTtGintMRhcSdPmcUTL9PkiTLU1X5FiUQY3CS300aHpM9kL3'
+SECRET_KEY = 'sk_test_51M1j6ISB7x1JZs2NUmAYlXrG5KuIcxQHsE2xHulr29lqKEcFVOCNpcJG0e95P6vF8AjaYaytfpamdOn3ERvuVwRE00MS5ShRNq'
+
+WEBHOOK_KEY = ''
 
