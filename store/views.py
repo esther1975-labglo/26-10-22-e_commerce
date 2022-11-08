@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from .models import Cartitems, Customer, Product, Cart, Wishlist, Order
 from django.http import JsonResponse
 from django.http import HttpResponse,HttpResponseRedirect
@@ -6,11 +6,66 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 import json
 import csv
+from django.views import View
 from django.db.models import Q
 from django.views.generic.list import ListView
 from django.shortcuts import get_list_or_404, get_object_or_404
 from math import ceil
 from django.core import serializers 
+import stripe
+from django.views.generic import TemplateView
+from django.conf import settings
+stripe.api_key = settings.SECRET_KEY
+from django.views.decorators.csrf import csrf_exempt
+
+class CreateCheckoutSessionView(View):
+    def post(self, request, *args, **kwargs):
+        product_id = Product.objects.get(id = 1)
+        product = Product.objects.get(name=product_id)
+        YOUR_DOMAIN = "http://127.0.0.1:8000"
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=[
+                {
+                    'price_data': {
+                        'currency': 'usd',
+                        'unit_amount':int(product.price)
+                        ,
+                        'product_data': {
+                            'name': product.name,
+                            # 'images': ['https://i.imgur.com/EHyR2nP.png'],
+                        },
+                    },
+                    'quantity': 1,
+                },
+            ],
+            metadata={
+                "product_id": product.id
+            },
+            mode='payment',
+            success_url=YOUR_DOMAIN + '/success/',
+            cancel_url=YOUR_DOMAIN + '/cancel/',
+        )
+        
+        print(checkout_session)
+        return redirect(checkout_session.url, status=200)
+
+
+
+@csrf_exempt
+def WebhookView(request):
+    payload = request.body.decode('utf-8')
+    print(payload)
+    return HttpResponse(True, status = 200)
+
+class SuccessView(TemplateView):
+    template_name = "success.html"
+
+
+class CancelView(TemplateView):
+    template_name = "cancel.html"
+
+
 def store(request):
     if request.user.is_authenticated:
         global cart
@@ -203,3 +258,7 @@ class wishlist_list(ListView):
         print("Get", data)
         obj = json.loads(data)
         return JsonResponse(obj, content_type = "application/json", status = 200, safe = False)
+
+
+#def order_create(request):
+   # cart = 

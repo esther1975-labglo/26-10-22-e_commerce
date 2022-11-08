@@ -1,6 +1,6 @@
 from django.urls import path
 from django.contrib.auth.decorators import login_required
-from .views import product_list, cart_list, cart_items_list, wishlist_list, search
+from .views import product_list, cart_list, cart_items_list, wishlist_list, search, CreateCheckoutSessionView, SuccessView, CancelView
 
 
 from . import views
@@ -10,7 +10,7 @@ urlpatterns = [
     path('search/', search.as_view(), name = 'search'),
     #path('search', views.search, name = 'search'),
     path('cart', views.cart, name = 'cart'),
-    path('checkout', views.checkout, name = 'checkout'),
+    path('checkout/', views.checkout, name = 'checkout'),
     path('updatecart', views.updateCart, name = 'updatecart'),
     path('updatequantity', views.updateQuantity, name = 'updatequantity'),
     path('remove_cart/<int:id>', views.remove_cart, name = 'remove_cart'),   
@@ -35,4 +35,8 @@ urlpatterns = [
     #path("add_wishlist/<int:Product_id>/",views.add_wishlist,name = 'add_wishlist'),
     #path("wishall", login_required(views.Wishproducts.as_view()), name='wishlist'),
    # path("remove_wishlist/<int:Product_id>/", views.remove_wishlist, name='remove_wish'),
+    path('checkout', CreateCheckoutSessionView.as_view(), name = 'checkout'),
+    path('cancel/', CancelView.as_view(), name = 'cancel'),
+    path('success/', SuccessView.as_view(), name = 'success'),
+    path('webhook/', views.WebhookView, name = 'webhook'),
 ]
