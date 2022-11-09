@@ -18,6 +18,8 @@ from django.conf import settings
 stripe.api_key = settings.SECRET_KEY
 from django.views.decorators.csrf import csrf_exempt
 
+#SESSION_ID_MAPPING = "session_id":[session_id]
+
 class CreateCheckoutSessionView(View):
     def post(self, request, *args, **kwargs):
         product_id = Product.objects.get(id = 1)
@@ -43,11 +45,18 @@ class CreateCheckoutSessionView(View):
                 "product_id": product.id
             },
             mode='payment',
-            success_url=YOUR_DOMAIN + '/success/',
-            cancel_url=YOUR_DOMAIN + '/cancel/',
+            success_url = YOUR_DOMAIN + '/success/',
+            cancel_url = YOUR_DOMAIN + '/cancel/',
         )
         
-        print(checkout_session)
+        print("checkout_session", checkout_session)
+        #event = json.loads(checkout_session)
+        #print("HELLO", event)
+        #if event['type'] == 'checkout.session.completed':
+            #session = event['data']['object']
+            #sessionID = session['id']
+            #ID = session['metadata']['product_id']
+            #Payment.objects.filter(id = ID).update(paid = True, description = sessionID)
         return redirect(checkout_session.url, status=200)
 
 
@@ -55,7 +64,24 @@ class CreateCheckoutSessionView(View):
 @csrf_exempt
 def WebhookView(request):
     payload = request.body.decode('utf-8')
-    print(payload)
+    print("payload", payload)
+    event = json.loads(payload)
+    print("HELLO", event)
+    if event['type'] == 'checkout.session.completed':
+        session = event['data']['object']
+        sessionID = session['id']
+        ID = session['metadata']['product_id']
+        Payment.objects.filter(id = ID).update(paid = True, description = sessionID)
+
+    elif event['type'] == 'payment_intent.payment_failed':
+        session = event['data']['object']
+        sessionID = session['id']
+        ID = session['metadata']['product_id']
+        Payment.objects.filter(id = ID).update(paid = True, description = sessionID)   
+
+
+
+
     return HttpResponse(True, status = 200)
 
 class SuccessView(TemplateView):

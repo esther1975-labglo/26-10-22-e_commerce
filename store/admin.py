@@ -26,7 +26,9 @@ admin.site.register(Wishlist)
 
 #admin.site.register(wishlist_items)
 admin.site.register(ShippingAddress)
-admin.site.register(Payment)
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ('transaction_id', 'status')
+admin.site.register(Payment, PaymentAdmin)
 
 
 class ProductAdmin(admin.ModelAdmin):
