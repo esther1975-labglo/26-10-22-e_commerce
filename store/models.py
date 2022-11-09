@@ -136,9 +136,10 @@ class Wishlist(TimeStampBaseModel):
 		return self.wished_item.title
 
 class Payment(models.Model):
-    transaction_id = models.IntegerField(null = True)
-    orders = models.ForeignKey(Order, on_delete=models.CASCADE)
-    status = models.BooleanField(default = PENDING)
+    transaction_id = models.TextField()
+    order = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    #status = models.SmallIntegerField(choices=Order_choices, default = 1)
+    status = models.BooleanField(default = 1)
     
 
 
